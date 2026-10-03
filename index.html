@@ -429,7 +429,12 @@ function autoSave(immediate=true){
   if($("autoSave").checked)saveNow();
 }
 function loadSaved(){try{const s=localStorage.getItem("ksse_banner_v4");if(!s)return status("ಹಳೆಯ ವಿನ್ಯಾಸ ಇಲ್ಲ");const x=JSON.parse(s);$("poster").innerHTML=x.html;$("poster").style.background=x.bg||"";rebindPosterAll();pushHistory();status("ಲೋಡ್ ಆಯಿತು ✓")}catch(e){}}
-function resetPoster(){if(confirm("ಎಲ್ಲಾ ಬದಲಾವಣೆಗಳನ್ನು reset ಮಾಡಬೇಕೇ?")){try{localStorage.removeItem("ksse_banner_v4")}catch(e){}location.reload()}}
+function resetPoster(){
+  if(!confirm("⚠️ ಮೊದಲ ಎಚ್ಚರಿಕೆ: ನೀವು Reset ಮಾಡಿದರೆ ಉಳಿಸಿರುವ ಎಲ್ಲಾ ಮಾಹಿತಿ ಮತ್ತು ಬದಲಾವಣೆಗಳು ಅಳಿಸಿಹೋಗುತ್ತವೆ. ಮುಂದುವರೆಯಬೇಕೇ?"))return;
+  if(!confirm("🚨 ಎರಡನೇ ಎಚ್ಚರಿಕೆ: ಈ ಕ್ರಿಯೆಯನ್ನು ರದ್ದುಪಡಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ. ಎಲ್ಲಾ ಮಾಹಿತಿಯನ್ನು ಸಂಪೂರ್ಣವಾಗಿ ಅಳಿಸಿ Reset ಮಾಡಬೇಕೇ?"))return;
+  try{localStorage.removeItem("ksse_banner_v4")}catch(e){}
+  location.reload();
+}
 $("bgColor").oninput=e=>{$("poster").style.background=e.target.value;autoSave(false)};document.addEventListener("input",e=>{if(e.target.matches("[contenteditable],input[type=text]"))autoSave(false)});window.onresize=()=>{fitTitle();syncLayout()};
 pushHistory();
 async function prepareExportImages(){
@@ -586,7 +591,16 @@ async function downloadPDF(){
   }
 }
 async function shareWhatsApp(){try{const c=await renderCanvas(),b=await new Promise(r=>c.toBlob(r,"image/png")),f=new File([b],"KSSEDEA_District_Banner.png",{type:"image/png"});if(navigator.share&&navigator.canShare&&navigator.canShare({files:[f]}))return navigator.share({title:"ಜಿಲ್ಲಾ ಘಟಕ ಬ್ಯಾನರ್",files:[f]})}catch(e){}window.open("https://wa.me/?text="+encodeURIComponent("ಕರ್ನಾಟಕ ರಾಜ್ಯ ಶಾಲಾ ಶಿಕ್ಷಣ ಇಲಾಖೆ ನೌಕರರ ಸಂಘ — ಜಿಲ್ಲಾ ಘಟಕ"),"_blank")}
-window.onload=()=>{applyFixedPhotos();fitTitle();syncLayout()};window.onbeforeunload=()=>{if($("autoSave").checked)saveNow()};
+window.onload=()=>{
+  if(localStorage.getItem("ksse_banner_v4")){
+    loadSaved();
+  }else{
+    applyFixedPhotos();
+    fitTitle();
+    syncLayout();
+  }
+};
+window.onbeforeunload=()=>{saveNow()};
 </script>
 <script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a448920fbbd058b2',t:'MTc5MDk5NTEwNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
